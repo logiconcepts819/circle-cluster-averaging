@@ -4,9 +4,9 @@ Circle Cluster Averaging Test Tool
 Introduction
 ------------
 
-This test tool reads a set of circles in 2D space; breaks them up into
-clusters, which are sets of circles that overlap one another; and averages all
-the clusters that contain some minimum number of circles.
+This test tool reads a set of circles in 2D space; breaks it up into clusters,
+which are sets of circles that overlap one another; and averages all the
+clusters that contain some minimum number of circles.
 
 Build/cleanup instructions
 --------------------------
