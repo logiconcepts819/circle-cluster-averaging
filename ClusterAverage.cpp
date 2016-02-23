@@ -48,8 +48,11 @@ static void ClusterCB(const Circle & targetCircle,
 			std::map<Circle, size_t>::const_iterator it2 =
 					circleClusterMap.find(*it);
 
-			// Find a cluster containing the adjacent circle.  Otherwise,
-			// create a new cluster with that adjacent circle.
+			// Find a cluster containing the adjacent circle. If it exists in
+			// a cluster other than the one containing the target circle, merge
+			// the two clusters together. If it doesn't exist in any cluster,
+			// add the adjacent circle to the cluster containing the target
+			// circle.
 			if (it2 != circleClusterMap.end())
 			{
 				// Check whether a merge is necessary
