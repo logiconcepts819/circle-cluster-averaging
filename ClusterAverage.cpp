@@ -57,12 +57,12 @@ static void ClusterCB(const Circle & targetCircle,
 			{
 				// Check whether a merge is necessary
 				size_t adjacentIdx = it2->second;
-				std::set<Circle> & adjClusterSet = circleClusters.at(
-						adjacentIdx);
 				if (adjacentIdx != targetIdx)
 				{
 					// Merge the two clusters together so that the adjacent
 					// circle and the target circle are in the same cluster
+					std::set<Circle> & adjClusterSet = circleClusters.at(
+							adjacentIdx);
 					std::set<Circle> & tgtClusterSet = circleClusters.at(
 							targetIdx);
 					while (!adjClusterSet.empty())
