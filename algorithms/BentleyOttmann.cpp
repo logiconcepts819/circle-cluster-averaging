@@ -70,12 +70,16 @@ void BentleyOttmann::AddCircle(double x, double y, double r)
 	BentleyOttmannEventData d1(
 			BentleyOttmannEventData::LEFT_ENDPOINT, s1, Circle(x, y, r));
 	BentleyOttmannEventData d2(
+			BentleyOttmannEventData::RIGHT_ENDPOINT, s1, Circle(x, y, r));
+	BentleyOttmannEventData d3(
+			BentleyOttmannEventData::LEFT_ENDPOINT, s2, Circle(x, y, r));
+	BentleyOttmannEventData d4(
 			BentleyOttmannEventData::RIGHT_ENDPOINT, s2, Circle(x, y, r));
 
 	m_eventQ.push(BentleyOttmannEvent(p1, d1));
 	m_eventQ.push(BentleyOttmannEvent(p2, d2));
-	m_eventQ.push(BentleyOttmannEvent(p3, d1));
-	m_eventQ.push(BentleyOttmannEvent(p4, d2));
+	m_eventQ.push(BentleyOttmannEvent(p3, d3));
+	m_eventQ.push(BentleyOttmannEvent(p4, d4));
 }
 
 void BentleyOttmann::Explore()

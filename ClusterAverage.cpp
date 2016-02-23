@@ -24,6 +24,20 @@ static void ClusterCB(const Circle & targetCircle,
 	std::map<Circle, size_t> & circleClusterMap = cbParams.circleClusterMap;
 	std::vector<std::set<Circle> > & circleClusters = cbParams.circleClusters;
 
+	// Make a new cluster containing target circle if necessary
+	std::map<Circle, size_t>::const_iterator targetIt =
+		circleClusterMap.find(targetCircle);
+	if (targetIt == circleClusterMap.end())
+	{
+		targetIt = circleClusterMap.insert(
+			std::make_pair(targetCircle, circleClusters.size())).first;
+
+		std::set<Circle> clusterSet;
+		clusterSet.insert(targetCircle);
+		circleClusters.push_back(clusterSet);
+	}
+
+	size_t targetIdx = targetIt->second;
 	for (std::vector<Circle>::const_iterator it = adjCircles.begin();
 			it != adjCircles.end(); ++it)
 	{
@@ -36,75 +50,46 @@ static void ClusterCB(const Circle & targetCircle,
 
 			// Find a cluster containing the adjacent circle.  Otherwise,
 			// create a new cluster with that adjacent circle.
-			size_t clusterIdx1;
-			if (it2 != circleClusterMap.end())
-			{
-				clusterIdx1 = it2->second;
-			}
-			else
-			{
-				std::set<Circle> clusterSet;
-				clusterSet.insert(*it);
-
-				clusterIdx1 = circleClusters.size();
-				circleClusters.push_back(clusterSet);
-				circleClusterMap.insert(std::make_pair(*it, clusterIdx1));
-			}
-
-			// Add the target circle to a cluster in some fashion, or if it
-			// exists in a different cluster, merge the two clusters together.
-			// Here, the objective is to ensure that no circle appears in more
-			// than one cluster.
-			std::set<Circle> & refClusterSet1 = circleClusters.at(clusterIdx1);
-			it2 = circleClusterMap.find(targetCircle);
 			if (it2 != circleClusterMap.end())
 			{
 				// Check whether a merge is necessary
-				size_t clusterIdx2 = it2->second;
-				if (clusterIdx2 != clusterIdx1)
+				size_t adjacentIdx = it2->second;
+				std::set<Circle> & adjClusterSet = circleClusters.at(
+						adjacentIdx);
+				if (adjacentIdx != targetIdx)
 				{
-					// Merge the two clusters together
-					std::set<Circle> & refClusterSet2 = circleClusters.at(
-							clusterIdx2);
-					while (!refClusterSet1.empty())
+					// Merge the two clusters together so that the adjacent
+					// circle and the target circle are in the same cluster
+					std::set<Circle> & tgtClusterSet = circleClusters.at(
+							targetIdx);
+					while (!adjClusterSet.empty())
 					{
-						std::set<Circle>::iterator it3 = refClusterSet1.begin();
-						refClusterSet2.insert(*it3);
-						refClusterSet1.erase(it3);
-						circleClusterMap.at(*it3) = clusterIdx2;
+						std::set<Circle>::iterator it3 = adjClusterSet.begin();
+						tgtClusterSet.insert(*it3);
+						adjClusterSet.erase(it3);
+						circleClusterMap.at(*it3) = targetIdx;
 					}
 				}
 			}
 			else
 			{
-				// Add the target circle to the cluster containing the adjacent
+				// Add the adjacent circle to the cluster containing the target
 				// circle
-				refClusterSet1.insert(targetCircle);
-				circleClusterMap.insert(std::make_pair(targetCircle,
-						clusterIdx1));
+				circleClusters.at(targetIdx).insert(*it);
+				circleClusterMap.insert(std::make_pair(*it, targetIdx));
 			}
 		}
 		else
 		{
-			// The circles don't overlap in any way
-			size_t vecSize = circleClusters.size();
-
-			// Make a new cluster containing adjacent circle if necessary
+			// The circles don't overlap in any way, so we just make a new
+			// cluster containing the adjacent circle if necessary
 			if (circleClusterMap.find(*it) == circleClusterMap.end())
 			{
+				circleClusterMap.insert(std::make_pair(*it, circleClusters.size()));
+
 				std::set<Circle> clusterSet;
 				clusterSet.insert(*it);
 				circleClusters.push_back(clusterSet);
-				circleClusterMap.insert(std::make_pair(*it, vecSize++));
-			}
-
-			// Make a new cluster containing target circle if necessary
-			if (circleClusterMap.find(targetCircle) == circleClusterMap.end())
-			{
-				std::set<Circle> clusterSet;
-				clusterSet.insert(targetCircle);
-				circleClusters.push_back(clusterSet);
-				circleClusterMap.insert(std::make_pair(targetCircle, vecSize));
 			}
 		}
 	}
