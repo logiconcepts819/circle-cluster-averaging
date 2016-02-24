@@ -68,9 +68,9 @@ static void ClusterCB(const Circle & targetCircle,
 					while (!adjClusterSet.empty())
 					{
 						std::set<Circle>::iterator it3 = adjClusterSet.begin();
+						circleClusterMap.at(*it3) = targetIdx;
 						tgtClusterSet.insert(*it3);
 						adjClusterSet.erase(it3);
-						circleClusterMap.at(*it3) = targetIdx;
 					}
 				}
 			}
