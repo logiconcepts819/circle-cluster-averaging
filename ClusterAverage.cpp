@@ -8,8 +8,6 @@
 #include "ClusterAverage.h"
 #include "algorithms/BentleyOttmann.h"
 
-using namespace std;
-
 struct ClusterCBParams
 {
 	std::map<Circle, size_t> circleClusterMap;
