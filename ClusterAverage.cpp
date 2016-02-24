@@ -72,13 +72,14 @@ static void ClusterCB(const Circle & targetCircle,
 						smClusterSet = lgClusterSet;
 						lgClusterSet = temp;
 					}
-					while (!smClusterSet->empty())
+					for (std::set<Circle>::const_iterator
+							it3 = smClusterSet->begin();
+							it3 != smClusterSet->end(); ++it3)
 					{
-						std::set<Circle>::iterator it3 = smClusterSet->begin();
 						circleClusterMap.at(*it3) = targetIdx;
 						lgClusterSet->insert(*it3);
-						smClusterSet->erase(it3);
 					}
+					smClusterSet->clear();
 				}
 			}
 			else
