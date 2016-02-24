@@ -60,17 +60,26 @@ static void ClusterCB(const Circle & targetCircle,
 				if (adjacentIdx != targetIdx)
 				{
 					// Merge the two clusters together so that the adjacent
-					// circle and the target circle are in the same cluster
-					std::set<Circle> & adjClusterSet = circleClusters.at(
+					// circle and the target circle are in the same cluster. To
+					// ensure good performance, we take away from the smaller
+					// cluster to add to the larger cluster.
+					std::set<Circle> * smClusterSet = &circleClusters.at(
 							adjacentIdx);
-					std::set<Circle> & tgtClusterSet = circleClusters.at(
+					std::set<Circle> * lgClusterSet = &circleClusters.at(
 							targetIdx);
-					while (!adjClusterSet.empty())
+					if (smClusterSet->size() > lgClusterSet->size())
 					{
-						std::set<Circle>::iterator it3 = adjClusterSet.begin();
+						targetIdx = adjacentIdx;
+						std::set<Circle> * temp = smClusterSet;
+						smClusterSet = lgClusterSet;
+						lgClusterSet = temp;
+					}
+					while (!smClusterSet->empty())
+					{
+						std::set<Circle>::iterator it3 = smClusterSet->begin();
 						circleClusterMap.at(*it3) = targetIdx;
-						tgtClusterSet.insert(*it3);
-						adjClusterSet.erase(it3);
+						lgClusterSet->insert(*it3);
+						smClusterSet->erase(it3);
 					}
 				}
 			}
