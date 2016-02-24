@@ -82,19 +82,6 @@ static void ClusterCB(const Circle & targetCircle,
 				circleClusterMap.insert(std::make_pair(*it, targetIdx));
 			}
 		}
-		else
-		{
-			// The circles don't overlap in any way, so we just make a new
-			// cluster containing the adjacent circle if necessary
-			if (circleClusterMap.find(*it) == circleClusterMap.end())
-			{
-				circleClusterMap.insert(std::make_pair(*it, circleClusters.size()));
-
-				std::set<Circle> clusterSet;
-				clusterSet.insert(*it);
-				circleClusters.push_back(clusterSet);
-			}
-		}
 	}
 }
 
